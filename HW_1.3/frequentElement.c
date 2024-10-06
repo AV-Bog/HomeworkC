@@ -6,7 +6,7 @@ int mostFrequentElement(int* array, int len);
 bool tests();
 
 int main() {
-    if (!tests) return 1;
+    if (!tests()) return 1;
 
     int len = 0;
 
