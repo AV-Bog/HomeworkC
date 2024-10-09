@@ -8,7 +8,7 @@ void ShellSort(int mass[], int n);
 bool tests();
 
 int main() {
-   /* if (!tests()) return 1;*/
+    if (!tests()) return 1;
 
     int size = 0;
 
