@@ -94,5 +94,26 @@ void sumBin(int num1[], int num2[], int ansver[]) {
 }
 
 bool tests() {
+	int a = -12;
+	int b = 12;
+
+	int aBin[BITS] = { 0 };
+	int bBin[BITS] = { 0 };
+
+	decInBin(a, aBin);
+	decInBin(b, bBin);
+
+	if (binInDec(aBin) != a) {
+		printf("the initial negative number does not coincide with itself when converted first to binary, then back");
+		return 1;
+	}
+
+	int sum[BITS] = { 0 };
+	sumBin(aBin, bBin, sum);
+
+	if (binInDec(sum) != 0) {
+		printf("the sum of numbers equal in modulus but different in sign is not zero");
+		return 1;
+	}
 	return 0;
 }
