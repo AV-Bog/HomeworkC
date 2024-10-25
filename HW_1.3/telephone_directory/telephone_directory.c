@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-//#pragma once
 
-#define strLength 100
+#define MAXLENGTH 100
 
 typedef struct entry {
-	char name[strLength];
-	char number[strLength];
+	char name[MAXLENGTH];
+	char number[MAXLENGTH];
 } entry;
 
 int readEntries(FILE* dataBase, entry colletion[]);
@@ -28,7 +27,7 @@ int main() {
 
 	do {
 		printOption();
-		int rez = scanf("%d", &option);
+		scanf("%d", &option);
 		
 		switch (option) {
 			case 0:
@@ -40,15 +39,15 @@ int main() {
 				displayEntries(collection, entryNumber);
 				break;
 			case 3:
-				printf("name?\t");
-				char name[strLength] = { '\0' };
-				int rez2 = scanf("%s", name);
+				printf("Enter name:\t");
+				char name[MAXLENGTH] = { '\0' };
+				scanf("%s", name);
 				searchByName(collection, entryNumber, name);
 				break;
 			case 4:
-				printf("number?\t");
-				char number[strLength];
-				int rez3 = scanf("%s", number);
+				printf("Enter number:\t");
+				char number[MAXLENGTH];
+				scanf("%s", number);
 				searchByNumber(collection, entryNumber, number);
 				break;
 			case 5:
@@ -60,33 +59,20 @@ int main() {
 }
 
 int readEntries(FILE* dataBase, entry colletion[]) {
-	
 	int i = 0;
-
-	char newName[strLength] = { '\0' };
-	char newNumber[strLength] = { '\0' };
+	char newName[MAXLENGTH] = { '\0' };
+	char newNumber[MAXLENGTH] = { '\0' };
 
 	while ((fscanf(dataBase, "%s", newName) != EOF) && (fscanf(dataBase, "%s", newNumber) != EOF)) {
 		strcpy(colletion[i].name, newName);
 		strcpy(colletion[i].number, newNumber);
 		i++;
 	}
-
 	return i;
 }
-//int readEntries(FILE* dataBase, entry collection[]) {
-//	int i = 0;
-//	char newName[strLength];
-//	char newNumber[strLength];
-//	while (fscanf_s(dataBase, "%s", newName, 5) != EOF && fscanf_s(dataBase, "%s", newNumber, 11) != EOF) {
-//		int rez1 = strcpy_s(collection[i].name, newName, 100);
-//		int rez = strcpy_s(collection[i].number, newNumber, 100);
-//		i++;
-//	}
-//	return i;
 
 void printOption() {
-	printf("\n*A phonebook*\n");
+	printf("\t*A phonebook*\n");
 	printf("Options: \n");
 	printf("0 - exit the phonebook\n");
 	printf("1 - add a new entry\n");
@@ -94,69 +80,68 @@ void printOption() {
 	printf("3 - find the phone number by name\n");
 	printf("4 - find the name by the phone number\n");
 	printf("5 - save entries to the database\n");
-	printf("Enter a corresponding digit to choose an option: ");
+	printf("\nEnter a corresponding digit to choose an option: \t");
 }
 
 void addEntery(entry collection[], int *entryNumber) {
 	if (*entryNumber <= 99) {
-		char newName[strLength];
-		char newNumber[strLength];
+		char newName[MAXLENGTH];
+		char newNumber[MAXLENGTH];
 
 		printf("enter the name: ");
-		int rez1 = scanf("%s", &newName);
+		scanf("%s", &newName);
 		printf("enter tne number: ");
-		int rez2 = scanf("%s", &newNumber);
+		scanf("%s", &newNumber);
 
-		int rez6 = strcpy(collection[*entryNumber].name, newName);
-		int rez7 = strcpy(collection[*entryNumber].number, newNumber);
+		strcpy(collection[*entryNumber].name, newName);
+		strcpy(collection[*entryNumber].number, newNumber);
 
 		(*entryNumber)++;
-
 		printf("\n DONE \n");
 	}
-	else printf("The limit is 100 entries!Can't write more!\n");
+	else {
+		printf("The limit is 100 entries!Can't write more!\n");
+	}
 }
 
 void displayEntries(entry collection[], int entryNumber) {
-	printf("all zapisi\n");
-
+	printf("All entries:\n");
 	for (int i = 0; i < entryNumber; i++) {
 		printf("%s %s\n", collection[i].name, collection[i].number);
 	}
-
 	printf("DONE\n");
 }
 
 void searchByName(entry collection[], int entryNumber, char name[]) {
-	bool flag = false; //фоаг - найден ли номер с таким именем
+	bool theRecordExists = false;
 	for (int i = 0; i < entryNumber; i++) {
 		if (strcmp(name, collection[i].name) == 0) {
 			printf(collection[i].number);
-			flag = true;
+			theRecordExists = true;
 		}
 	}
-	if (flag == false) {
-		printf("soryy!");
+	if (theRecordExists == false) {
+		printf("Unfortunately, the name number you entered is not in the phone book.");
 	}
 }
 
 void searchByNumber(entry collection[], int entryNumber, char number[]) {
-	bool flag = false; //фоаг - найден ли номер с таким именем
+	bool theRecordExists = false; 
 	for (int i = 0; i < entryNumber; i++) {
 		if (strcmp(number, collection[i].number) == 0) {
 			printf(collection[i].name);
-			flag = true;
+			theRecordExists = true;
 		}
 	}
-	if (flag == false) {
-		printf("soryy!");
+	if (theRecordExists == false) {
+		printf("Unfortunately, the phone number you entered is not in the phone book.");
 	}
 }
 
 void saveEntries(entry collection[], int length, const char* fileName) {
 	FILE* dataBase = fopen(fileName, "w");
 	for (int i = 0; i < length; i++) {
-		fprinf(dataBase, "%s %s\n", collection[i].name, collection[i].number);
+		fprintf(dataBase, "%s %s\n", collection[i].name, collection[i].number);
 	}
 	printf("Entries are saved!\n");
 	fclose(dataBase);
