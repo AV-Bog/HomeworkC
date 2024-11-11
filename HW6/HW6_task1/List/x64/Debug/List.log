@@ -1,0 +1,7 @@
+﻿  listMain.c
+  main.c
+C:\Users\ASUS\source\repos\List\main.c(22,13): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ASUS\source\repos\List\main.c(33,13): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ASUS\source\repos\List\main.c(40,13): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Создание кода...
+  List.vcxproj -> C:\Users\ASUS\source\repos\List\x64\Debug\List.exe
