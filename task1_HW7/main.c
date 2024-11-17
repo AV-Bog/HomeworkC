@@ -9,22 +9,22 @@ int main() {
         return 1;
     }
 
-	FILE* file = fopen("file.txt", "r");
-	if (file == NULL) {
-		printf("File not found");
-		return 1;
-	}
-	char file—ontents[100];
-	fscanf(file, "%[^\n]", file—ontents);
+    FILE* file = fopen("file.txt", "r");
+    if (file == NULL) {
+        printf("File not found");
+        return 1;
+    }
+    char fileContents[100];
+    fscanf(file, "%[^\n]", fileContents);
 
-	ParseTree* tree = buildParseTree(file—ontents);
+    ParseTree* tree = buildParseTree(fileContents);
     printTree(tree);
     printf("Answer: ");
-	printf("%d", calculationExpression(tree));
+    printf("%d", calculationExpression(tree));
 
-	fclose(file);
-	deleteParseTree(tree);
-	return 0;
+    fclose(file);
+    deleteParseTree(tree);
+    return 0;
 }
 
 bool tests() {
