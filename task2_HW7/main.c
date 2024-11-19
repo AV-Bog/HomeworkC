@@ -17,63 +17,72 @@ int main() {
 	int choice = -1;
 	char valueBuffer[256] = { '\0' };
 	int key = 0;
-	options();
-	scanf("%d", &choice);
+	
 
-	while (choice != 0) {
+	do {
+		options();
+		scanf("%d", &choice);
 		switch (choice) {
-		case 1:
-			printf("Enter a key: ");
-			scanf("%d", &key);
-			printf("Enter the value: ");
-			scanf("%c", &valueBuffer);
-
-			char* value = malloc(sizeof(char) * 256);
-			if (value == NULL) {
-				printf("Out of memory\n");
-				deleteDictionary(dictionary);
-				return 1;
-			}
-
-			strcpy(value, valueBuffer);
-			if (theKeyExists(dictionary, key)) {
-				changeData(dictionary, key, value);
+			case 0:
 				break;
-			}
-			insert(dictionary, key, value);
-			break;
-		case 2:
-			printf("Enter key: ");
-			scanf("%d", &key);
-			printf("The value is %s\n", getValue(dictionary, key));
-			break;
-		case 3:
-			printf("Enter a key: ");
-			scanf("%d", &key);
-			if (theKeyExists(dictionary, key)) {
-				printf("There is such a key in the dictionary\n");
-			}
-			else {
-				printf("There is no such a key in the dictionary\n");
-			}
-			break;
-		case 4:
-			printf("Enter a key: ");
-			scanf("%d", &key);
-			if (theKeyExists(dictionary, key)) {
-				deleteViaKey(dictionary, key);
-				printf("the key and its corresponding value were successfully deleted");
-			}
-			else {
-				printf("the key is not in the dictionary");
-			}
-		default:
-			printf("Invalid input");
-			deleteDictionary(dictionary);
-			break;
+			case 1:
+				printf("Enter a key: ");
+				scanf("%d", &key);
+				printf("Enter the value: ");
+				scanf("%s", &valueBuffer);
+
+				char* value = malloc(sizeof(char) * 256);
+				if (value == NULL) {
+					printf("Out of memory\n");
+					deleteDictionary(dictionary);
+					return 1;
+				}
+
+				strcpy(value, valueBuffer);
+				if (theKeyExists(dictionary, key)) {
+					changeData(dictionary, key, value);
+					break;
+				}
+				insert(dictionary, key, value);
+				printf("Value and its corresponding key have been successfully added!\n");
+				printf("\n");
+				break;
+			case 2:
+				printf("Enter key: ");
+				scanf("%d", &key);
+				printf("The value is %s\n", getValue(dictionary, key));
+				printf("\n");
+				break;
+			case 3:
+				printf("Enter a key: ");
+				scanf("%d", &key);
+				if (theKeyExists(dictionary, key)) {
+					printf("There is such a key in the dictionary\n");
+				}
+				else {
+					printf("There is no such a key in the dictionary\n");
+				}
+				break;
+			case 4:
+				printf("Enter a key: ");
+				scanf("%d", &key);
+				if (theKeyExists(dictionary, key)) {
+					deleteViaKey(dictionary, key);
+					printf("the key and its corresponding value were successfully deleted");
+				}
+				else {
+					printf("the key is not in the dictionary");
+				}
+				break;
+			default:
+				printf("Invalid input");
+				deleteDictionary(dictionary);
+				break;
 		}
-	}
+	} while (choice != 0);
+
 	deleteDictionary(dictionary);
+
 }
 
 bool tests() {
