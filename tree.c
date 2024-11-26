@@ -33,22 +33,15 @@ Node* getNewNode(char* key, char* value) {
 }
 
 int height(struct Node* node) {
-    if (node == NULL) {
-        return 0;
-    }
-    return node->height;
+    return node == NULL ? 0 : node->height;
 }
 
 int getBalance(struct Node* root) {
-    if (root == NULL) {
-        return 0;
-    }
-    return height(root->left) - height(root->right);
+    return root == NULL ? 0 : height(root->left) - height(root->right);
 }
 
 Node* rightRotate(Node* root) {
     Node* leftSubtree = root->left;
-
     if (leftSubtree->right != NULL) {
         Node* leftSubtreeRightSubtree = leftSubtree->right;
 
@@ -57,23 +50,18 @@ Node* rightRotate(Node* root) {
 
         leftSubtree->height = max(height(leftSubtree->left), height(leftSubtree->right));
         root->height = max(height(root->left), height(root->right)) + 1;
-
-        return leftSubtree;
     }
     else {
         leftSubtree->right = root;
-
+        root->left = NULL;
         leftSubtree->height = max(height(leftSubtree->left), height(leftSubtree->right));
         root->height = max(height(root->left), height(root->right)) + 1;
-
-        return leftSubtree;
     }
-
+    return leftSubtree;
 }
 
 Node* leftRotate(Node* root) {
     Node* rightSubtree = root->right;
-
     if (rightSubtree->left != NULL) {
         Node* rightSubtreeLeftSubtree = rightSubtree->left;
 
@@ -82,18 +70,14 @@ Node* leftRotate(Node* root) {
 
         rightSubtree->height = max(height(rightSubtree->left), height(rightSubtree->right));
         root->height = max(height(root->left), height(root->right)) + 1;
-
-        return rightSubtree;
     }
     else {
         rightSubtree->left = root;
-
+        root->right = NULL;
         rightSubtree->height = max(height(rightSubtree->left), height(rightSubtree->right));
         root->height = max(height(root->left), height(root->right)) + 1;
-
-        return rightSubtree;
     }
-
+    return rightSubtree;
 }
 
 Node* insertRecurtion(Node* root, char* key, char* value) {
@@ -148,8 +132,6 @@ void deleteRecursion(Node* root) {
     }
     deleteRecursion(root->left);
     deleteRecursion(root->right);
-    /*free(root->value);
-    free(root->key);*/
     free(root);
 }
 

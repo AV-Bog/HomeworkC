@@ -5,10 +5,10 @@
 #include "tree.h"
 
 void options();
-bool test1();
-bool test3();
+bool checkingRotates();
+bool functionCheck();
 bool tests() {
-    return test1() && test3();
+    return checkingRotates() && functionCheck();
 }
 
 
@@ -23,7 +23,6 @@ int main() {
     const valueBuffer[256] = { '\0' };
     const keyBuffer[256] = { '\0' };
 
-
     do {
         options();
         scanf("%d", &choice);
@@ -35,7 +34,7 @@ int main() {
             scanf("%s", keyBuffer);
             printf("Enter the value: ");
             scanf("%s", valueBuffer);
-            const char* key = malloc(sizeof(const char) * 256);
+            char* key = malloc(sizeof(char) * 256);
             char* value = malloc(sizeof(char) * 256);
             strcpy(key, keyBuffer);
             strcpy(value, valueBuffer);
@@ -44,7 +43,6 @@ int main() {
             printf("Value and its corresponding key have been successfully added!\n");
             printf("\n");
             break;
-
         case 2:
             printf("Enter key: ");
             scanf("%s", key);
@@ -84,8 +82,17 @@ int main() {
     return 1;
 }
 
-bool test1() {
-    //because of this deletion the program crashes. I have already tried everything. Help me please!
+void options() {
+    printf("Options\n");
+    printf("0 - Exit\n");
+    printf("1 - Add a value with a correlating key\n");
+    printf("2 - Get a value via a key\n");
+    printf("3 - Check to see if there's a key in the dictionary\n");
+    printf("4 - Delete a key and acorrelating value\n");
+    printf("Enter a corresponding digit to choose an aption: ");
+}
+
+bool checkingRotates() {
     Dictionary* testDictinary0 = createDictionary();
     insert(testDictinary0, "4", "a");
     insert(testDictinary0, "3", "b");
@@ -114,51 +121,41 @@ bool test1() {
     return true;
 }
 
-bool test3() {
-    //Dictionary* testDictionary = createDictionary();
-    //insert(testDictionary, "7", "q");
-    //insert(testDictionary, "3", "w");
-    //insert(testDictionary, "2", "e");
-    ///*insert(testDictionary, "5", "r");*/
-    ///*insert(testDictionary, "4", "4");
-    //insert(testDictionary, "6", "6");*/
-    //insert(testDictionary, "14", "ty");
+bool functionCheck() {
+    Dictionary* testDictionary = createDictionary();
+    insert(testDictionary, "7", "q");
+    insert(testDictionary, "3", "w");
+    insert(testDictionary, "2", "e");
+    insert(testDictionary, "5", "r");
+    insert(testDictionary, "6", "6");
+    insert(testDictionary, "14", "ty");
 
-    //if (!theKeyExists(testDictionary, "2")) {
-    //  printf("existing key not found");
-    //  deleteDictionary(testDictionary);
-    //  return false;
-    //}
-    //if (theKeyExists(testDictionary, "10")) {
-    //  printf("non-existent key found");
-    //  deleteDictionary(testDictionary);
-    //  return false;
-    //}
-    //if (getValue(testDictionary, "14") != "ty") {
-    //  printf("error searching for value by existing key");
-    //  deleteDictionary(testDictionary);
-    //  return false;
-    //}
-    //if (strcmp(getValue(testDictionary, "13"), "NULL") != 0) {
-    //  printf("Get value function failed on trying to get a value of a nonexistent key");
-    //  deleteDictionary(testDictionary);
-    //  return false;
-    //}
-    //deleteViaKey(testDictionary, "2");
-     //if (theKeyExists(testDictionary, "2")) {
-     //  printf("error deleting key with its corresponding value");
-     //  deleteDictionary(testDictionary);
-     //  return false;
-     //};
+    if (!theKeyExists(testDictionary, "2")) {
+      printf("existing key not found");
+      deleteDictionary(testDictionary);
+      return false;
+    }
+    if (theKeyExists(testDictionary, "10")) {
+      printf("non-existent key found");
+      deleteDictionary(testDictionary);
+      return false;
+    }
+    if (getValue(testDictionary, "14") != "ty") {
+      printf("error searching for value by existing key");
+      deleteDictionary(testDictionary);
+      return false;
+    }
+    if (strcmp(getValue(testDictionary, "13"), "NULL") != 0) {
+      printf("Get value function failed on trying to get a value of a nonexistent key");
+      deleteDictionary(testDictionary);
+      return false;
+    }
+    deleteViaKey(testDictionary, "2");
+     if (theKeyExists(testDictionary, "2")) {
+       printf("error deleting key with its corresponding value");
+       deleteDictionary(testDictionary);
+       return false;
+     };
+
     return true;
-}
-
-void options() {
-	printf("Options\n");
-	printf("0 - Exit\n");
-	printf("1 - Add a value with a correlating key\n");
-	printf("2 - Get a value via a key\n");
-	printf("3 - Check to see if there's a key in the dictionary\n");
-	printf("4 - Delete a key and acorrelating value\n");
-	printf("Enter a corresponding digit to choose an aption: ");
 }
