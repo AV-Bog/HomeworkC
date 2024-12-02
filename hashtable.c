@@ -1,13 +1,21 @@
-#include "list.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "hashtable.h"
+#define TABLE_SIZE 1000
+
 typedef struct Node {
 	const char* word;
 	int count;
 	Node* next;
 } Node;
 
+typedef struct HashTable {
+	Node* table[TABLE_SIZE];
+} HashTable;
+
 Node* create_node(const char* word) {
 	Node* new_node = malloc(sizeof(Node));
-	/*strcpy(new_node->word, word);*/
 	new_node->word = word;
 	new_node->count = 1;
 	new_node->next = NULL;
@@ -40,16 +48,10 @@ void free_list(Node* head) {
 	while (head != NULL) {
 		temp = head;
 		head = head->next;
-		/*free(temp->word);*/
 		free(temp);
 	}
 }
 
-#define TABLE_SIZE 1000
-
-typedef struct HashTable {
-	Node* table[TABLE_SIZE];
-} HashTable;
 
 unsigned int hash(const char* word) {
 	unsigned int hash_value = 0;
@@ -61,10 +63,6 @@ unsigned int hash(const char* word) {
 
 HashTable* created_table() {
 	HashTable* hashTable = malloc(sizeof(HashTable));
-	/*if (hashTable == NULL) {
-		printf("Out of memory\n");
-		exit(1);
-	}*/
 	for (int i = 0; i < TABLE_SIZE; i++) {
 		hashTable->table[i] = NULL;
 	}
@@ -100,8 +98,7 @@ void printWordAndCount(HashTable* hashTable) {
 	for (int i = 0; i < TABLE_SIZE; i++) {
 		Node* current = hashTable->table[i];
 		while (current != 0) {
-			printf("%s\t", current->word);
-			printf("%d\n", current->count);
+			printf("\"%s\": %d\n", current->word, current->count);
 			current = current->next;
 		}
 	}
@@ -132,5 +129,5 @@ void CalculationAndDisplayOfStatistics(HashTable* hashTable) {
 
 	printf("Fill factor: %.2f\n", (float)totalEntries / TABLE_SIZE);
 	printf("Max list lenght: %d\n", maxListLenght);
-	printf("Average list length: %.2f\n", (float)totalListLehght / nonEmptyBuckets);
+	printf("Average list length: %.2f\n", (float)nonEmptyBuckets/totalListLehght);
 }
