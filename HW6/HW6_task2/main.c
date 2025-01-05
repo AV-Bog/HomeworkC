@@ -16,18 +16,24 @@ int main() {
     
     LinkedList *circle = createCircle(n);
     printf("The position to survive is %d\n", count(circle, m));
+
+    deleteCircleList(circle);
+
+    return 0;
 }
 
 bool test() {
     LinkedList* test1 = createCircle(1);
     if (count(test1, 10) != 1) {
         printf("Failed when there's one warrior\n");
+        deleteCircleList(test1);
         return false;
     }
 
     LinkedList* test2 = createCircle(41);
     if (count(test2, 3) != 31) {
         printf("Failed on a regular test\n");
+        deleteCircleList(test2);
         return false;
     }
     return true;

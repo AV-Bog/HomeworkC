@@ -11,6 +11,9 @@ typedef struct LinkedList {
 
 LinkedList* createList() {
     LinkedList* linkedlist = malloc(sizeof(LinkedList));
+    if (linkedlist == NULL) {
+        return NULL;
+    }
     linkedlist->head = NULL;
     return linkedlist;
 }
@@ -20,18 +23,37 @@ LinkedList* createCircle(int n) {
     LinkedList* circle = createList();
     for (int i = n; i > 0; i--) {
         Node* warrior = malloc(sizeof(Node));
-
+        if (warrior == NULL) {
+            return NULL;
+        }
         warrior->data = i;
         warrior->next = head;
         head = warrior;
     }
-    Node* temp1 = head;
-    while (temp1->next != NULL) {
-        temp1 = temp1->next;
+    Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
     }
-    temp1->next = head;
+    temp->next = head;
     circle->head = head;
     return circle;
+}
+
+void deleteCircleList(LinkedList* list) {
+    if (list == NULL || list->head == NULL) {
+        return;
+    }
+
+    Node* current = list->head;
+    Node* nextNode = NULL;
+
+    do {
+        nextNode = current->next;
+        free(current);
+        current = nextNode;
+    } while (current != list->head);
+
+    free(list);
 }
 
 int count(LinkedList* circularList, int m) {
@@ -47,8 +69,8 @@ int count(LinkedList* circularList, int m) {
             killer = killer->next;
         }
         killer->next = victim->next;
-        killer = victim->next;
-        victim = victim->next;
+        free(victim);
+        victim = killer->next;
     }
-    return(killer->data);
+    return killer->data;
 }
