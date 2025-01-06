@@ -87,12 +87,35 @@ void options() {
     printf("Enter a corresponding digit to choose an aption: ");
 }
 
+bool checkingBalanceInvariant(Dictionary* dictionary) {
+    return checkBalanceHelper(dictionary->root);
+}
+
+bool checkBalanceHelper(Node* node) {
+    if (node == NULL) {
+        return true;
+    }
+
+    int balance = getBalance(node);
+
+    if (balance < -1 || balance > 1) {
+        printf("Balance invariant violated at node with key: %s\n", node->key);
+        return false;
+    }
+
+    return checkBalanceHelper(node->left) && checkBalanceHelper(node->right);
+}
+
 bool checkingRotates() {
     Dictionary* testDictinary0 = createDictionary();
     insert(testDictinary0, "4", "a");
     insert(testDictinary0, "3", "b");
     insert(testDictinary0, "2", "c");
     insert(testDictinary0, "1", "d");
+    if (!checkingBalanceInvariant(testDictinary0)) {
+        deleteDictionary(testDictinary0);
+        return false;
+    }
     //left rotate provocation
     deleteDictionary(testDictinary0);
 
@@ -102,6 +125,10 @@ bool checkingRotates() {
     insert(testDictinary2, "3", "b");
     insert(testDictinary2, "2", "c");
     insert(testDictinary2, "5", "d");
+    if (!checkingBalanceInvariant(testDictinary2)) {
+        deleteDictionary(testDictinary2);
+        return false;
+    }
     //provocation of left rotate then right
     deleteDictionary(testDictinary2);
 
@@ -110,6 +137,10 @@ bool checkingRotates() {
     insert(testDictinary3, "3", "b");
     insert(testDictinary3, "2", "c");
     insert(testDictinary3, "5", "d");
+    if (!checkingBalanceInvariant(testDictinary3)) {
+        deleteDictionary(testDictinary3);
+        return false; 
+    }
     //provocation of left rotate then right. absent right son at the root
     deleteDictionary(testDictinary3);
 
