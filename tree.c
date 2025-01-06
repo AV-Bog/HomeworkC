@@ -17,15 +17,18 @@ struct Dictionary {
 };
 
 Dictionary* createDictionary() {
-    Dictionary* tree = malloc(sizeof(Dictionary));
+    Dictionary* tree = calloc(sizeof(Dictionary), 1);
     tree->root = NULL;
     return tree;
 }
 
 Node* getNewNode(char* key, char* value) {
     Node* newNode = malloc(sizeof(Node));
+    if (newNode == NULL) {
+        retern NULL;
+    }
     newNode->key = key;
-    newNode->value = value;
+    newNode->value = strdup(value);
     newNode->left = NULL;
     newNode->right = NULL;
     newNode->height = 1;
@@ -80,16 +83,16 @@ Node* leftRotate(Node* root) {
     return rightSubtree;
 }
 
-Node* insertRecurtion(Node* root, char* key, char* value) {
+Node* insertRecursive(Node* root, char* key, char* value) {
     if (root == NULL) {
         return getNewNode(key, value);
     }
 
     if (strcmp(key, root->key) < 0) {
-        root->left = insertRecurtion(root->left, key, value);
+        root->left = insertRecursive(root->left, key, value);
     }
     else if (strcmp(key, root->key) > 0) {
-        root->right = insertRecurtion(root->right, key, value);
+        root->right = insertRecursive(root->right, key, value);
     }
     else {
         free(root->value);
@@ -122,8 +125,8 @@ Node* insertRecurtion(Node* root, char* key, char* value) {
     return root;
 }
 
-void insert(Dictionary* dictionary, char* key, char* value) {
-    dictionary->root = insertRecurtion(dictionary->root, key, value);
+void insert(Dictionary* dictionary, const char* key, const char* value) {
+    dictionary->root = insertRecursive(dictionary->root, key, value);
 }
 
 void deleteRecursion(Node* root) {
@@ -132,14 +135,16 @@ void deleteRecursion(Node* root) {
     }
     deleteRecursion(root->left);
     deleteRecursion(root->right);
+    free(root->key);
+    free(root->value);
     free(root);
 }
 
 void deleteDictionary(Dictionary* dictionary) {
     deleteRecursion(dictionary->root);
     free(dictionary);
-    return;
 }
+
 bool search(Node* root, char* key) {
     if (root == NULL) {
         return false;
@@ -158,6 +163,7 @@ bool search(Node* root, char* key) {
 bool theKeyExists(Dictionary* dictionary, char* key) {
     return search(dictionary->root, key);
 }
+
 Node* findNodeByKey(Node* root, char* key) {
     if (strcmp(root->key, key) == 0) {
         return root;
@@ -170,14 +176,9 @@ Node* findNodeByKey(Node* root, char* key) {
     }
 }
 
-void changeData(Dictionary* dictionary, char* key, char* newValue) {
-    Node* temp = findNodeByKey(dictionary->root, key);
-    temp->value = newValue;
-}
-
 char* searchGetValue(Node* root, char* key) {
     if (root == NULL) {
-        return "NULL";
+        return NULL;
     }
     else if (strcmp(root->key, key) == 0) {
         return root->value;
@@ -204,7 +205,7 @@ struct Node* minValueNode(struct  Node* node) {
 
 Node* deleteRootRecursion(Node* root, char* key) {
     if (root == NULL) {
-        return root;
+        return NULL;
     }
     if (strcmp(key, root->key) < 0) {
         root->left = deleteRootRecursion(root->left, key);
@@ -222,19 +223,26 @@ Node* deleteRootRecursion(Node* root, char* key) {
             else {
                 *root = *temp;
             }
+            free(temp->key);
+            free(temp->value);
             free(temp);
         }
 
         else {
             Node* temp = minValueNode(root->right);
+            
+            free(root->key);
+            free(root->value);
+
             root->key = temp->key;
+            root->value = temp->value;
 
             root->right = deleteRootRecursion(root->right, key);
         }
         return root;
     }
 
-    (root)->height = 1 + max(height((root)->left), height((root)->right));
+    root->height = 1 + max(height(root->left), height(root->right));
 
     int balance = getBalance(root);
 

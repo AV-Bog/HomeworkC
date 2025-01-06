@@ -7,6 +7,7 @@
 void options();
 bool checkingRotates();
 bool functionCheck();
+
 bool tests() {
     return checkingRotates() && functionCheck();
 }
@@ -34,25 +35,20 @@ int main() {
             scanf("%s", keyBuffer);
             printf("Enter the value: ");
             scanf("%s", valueBuffer);
-            char* key = malloc(sizeof(char) * 256);
-            char* value = malloc(sizeof(char) * 256);
-            strcpy(key, keyBuffer);
-            strcpy(value, valueBuffer);
-
-            insert(dictionary, key, value);
+            insert(dictionary, keyBuffer, valueBuffer);
             printf("Value and its corresponding key have been successfully added!\n");
             printf("\n");
             break;
         case 2:
             printf("Enter key: ");
-            scanf("%s", key);
-            printf("The value is %s\n", getValue(dictionary, key));
+            scanf("%s", keyBuffer);
+            printf("The value is %s\n", getValue(dictionary, keyBuffer));
             printf("\n");
             break;
         case 3:
             printf("Enter a key: ");
-            scanf("%s", key);
-            if (theKeyExists(dictionary, key)) {
+            scanf("%s", keyBuffer);
+            if (theKeyExists(dictionary, keyBuffer)) {
                 printf("There is such a key in the dictionary\n");
             }
             else {
@@ -61,10 +57,9 @@ int main() {
             break;
         case 4:
             printf("Enter a key: ");
-            scanf("%s", key);
-            strcpy(key, keyBuffer);
-            if (theKeyExists(dictionary, key)) {
-                deleteViaKey(dictionary, key);
+            scanf("%s", keyBuffer);
+            if (theKeyExists(dictionary, keyBuffer)) {
+                deleteViaKey(dictionary, keyBuffer);
                 printf("the key and its corresponding value were successfully deleted");
             }
             else {
