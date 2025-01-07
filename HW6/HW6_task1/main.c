@@ -89,6 +89,9 @@ void deleteElementFromSortedList(List* list, Value value) {
             deleteElement(list, position);
             break;
         }
+        if (getValue(list, position) > value) {
+            break;
+        }
         position = next(position);
     }
 }
@@ -104,12 +107,14 @@ bool listTest() {
     addElement(list, position, 17);
     if (!isValid(list, position)) {
         printf("Error when adding to the List structure (position = 0)");
+        deleteList(list);
         return false;
     }
 
     position = next(position);
     if (getValue(list, position) != 17) {
         printf("Error when adding to the List structure (the added value does not match the one being added)");
+        deleteList(list);
         return false;
     }
 
@@ -119,6 +124,7 @@ bool listTest() {
     setValue(list, position, 71);
     if (getValue(list, position) != 71) {
         printf("multiple addition error");
+        deleteList(list);
         return false;
     }
 

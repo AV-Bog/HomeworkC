@@ -13,10 +13,6 @@ typedef struct List {
     ListElement* head;
 } List;
 
-typedef ListElement* Position;
-
-typedef int Value;
-
 List* createList(void) {
     List* list = malloc(sizeof(List));
     if (list == NULL) {
@@ -73,4 +69,14 @@ bool isLast(List* list, Position position) {
 
 bool isValid(List* list, Position position) {
     return position != NULL;
+}
+
+void deleteList(List* list) {
+    Position position = first(list);
+    while (isValid(list, position)) {
+        Position temp = next(position);
+        deleteElement(list, position);
+        position = temp; 
+    }
+    free(list); 
 }
