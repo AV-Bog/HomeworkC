@@ -1,13 +1,20 @@
 #pragma once
 
+// Forward declaration of Node and HashTable structures.
 typedef struct Node Node;
-Node* create_node(const char* word);
-void insert(Node** head, const char* word);
-void free_list(Node* head);
-
 typedef struct HashTable HashTable;
+
+// Hash function to compute an hash index for a given word.
 unsigned int hash(const char* word);
-HashTable* created_table();
-void insert_word(HashTable* hashTable, const char* word);
+
+// Function to create a new hash table.
+HashTable* createTable();
+
+// Function to insert a word into the hash table.
+bool insertWord(HashTable* hashTable, const char* word);
+
+// Function to search for a word in the hash table.
 Node* search(HashTable* hashTable, const char* word);
+
+// Function to free the memory allocated for the hash table.
 void freeTable(HashTable* hashTable);

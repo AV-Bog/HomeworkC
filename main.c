@@ -6,20 +6,25 @@
 
 #include "hashtable.h"
 
-void readingAFile(HashTable* hashTable) {
+void readFromFile(HashTable* hashTable) {
 	FILE* file = fopen("file.txt", "r");
 	if (file == NULL) {
 		printf("Failed to open file");
 		return;
 	}
 
-	char wordBuffer[100];
+	char wordBuffer[100] = { '\0' };
 	while (!feof(file)) {
 		fscanf(file, "%s", wordBuffer);
 		const char* word = malloc(sizeof(char) * strlen(wordBuffer));
+		if (word == NULL) {
+			printf("Memory allocation failed\n");
+			fclose(file);
+			return;
+		}
 		strcpy(word, wordBuffer);
 		if (strlen(word) > 0) {
-			insert_word(hashTable, word);
+			insertWord(hashTable, word);
 		}
 	}
 	fclose(file);
@@ -31,8 +36,8 @@ int main() {
 	if (!tests()) {
 		return 1;
 	}
-	HashTable* hashTable = created_table();
-	readingAFile(hashTable);
+	HashTable* hashTable = createTable();
+	readFromFile(hashTable);
 	printWordAndCount(hashTable);
 	CalculationAndDisplayOfStatistics(hashTable);
 
@@ -41,11 +46,14 @@ int main() {
 }
 
 bool tests() {
-	HashTable* hashTable = created_table();
-	insert_word(hashTable, "word1");
-	insert_word(hashTable, "word2");
-	insert_word(hashTable, "word3");
-	insert_word(hashTable, "word4");
+	HashTable* hashTable = createTable();
+	if (!insertWord(hashTable, "word1")) {
+		printf("error allocating memory for addition");
+		return false;
+	}
+	insertWord(hashTable, "word2");
+	insertWord(hashTable, "word3");
+	insertWord(hashTable, "word4");
 	
 	Node* current = search(hashTable, "word2");
 	if (current == NULL) {
