@@ -22,12 +22,17 @@ void readFromFile(HashTable* hashTable) {
 			fclose(file);
 			return;
 		}
-		strcpy(word, wordBuffer);
+
 		if (strlen(word) > 0) {
-			insertWord(hashTable, word);
+			if (!insertWord(hashTable, word)) {
+				printf("Error inserting word\n");
+				free(word);
+				fclose(file);
+				return;
+			}
 		}
+		free(word);
 	}
-	fclose(file);
 }
 
 bool tests();
@@ -47,17 +52,24 @@ int main() {
 
 bool tests() {
 	HashTable* hashTable = createTable();
+	if (hashTable == NULL) {
+		printf("Memory allocation failed for hash table\n");
+		return false;
+	}
+
 	if (!insertWord(hashTable, "word1")) {
-		printf("error allocating memory for addition");
+		printf("Error allocating memory for addition\n");
+		freeTable(hashTable);
 		return false;
 	}
 	insertWord(hashTable, "word2");
 	insertWord(hashTable, "word3");
 	insertWord(hashTable, "word4");
-	
+
 	Node* current = search(hashTable, "word2");
 	if (current == NULL) {
-		printf("word not found in hash table");
+		printf("Word not found in hash table\n");
+		freeTable(hashTable);
 		return false;
 	}
 

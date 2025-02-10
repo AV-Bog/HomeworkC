@@ -18,3 +18,7 @@ Node* search(HashTable* hashTable, const char* word);
 
 // Function to free the memory allocated for the hash table.
 void freeTable(HashTable* hashTable);
+
+void printWordAndCount(HashTable* hashTable);
+
+void CalculationAndDisplayOfStatistics(HashTable* hashTable);

@@ -22,7 +22,7 @@ Node* createNode(const char* word) {
         return NULL;
     }
 
-    strcpy(newNode->word, word);
+    newNode->word = strdup(word);
     newNode->count = 1;
     newNode->next = NULL;
     return newNode;
@@ -33,7 +33,7 @@ bool insert(Node** head, const char* word) {
     while (current != NULL) {
         if (strcmp(current->word, word) == 0) {
             current->count++;
-            return;
+            return true;
         }
         current = current->next;
     }
@@ -43,6 +43,7 @@ bool insert(Node** head, const char* word) {
         return false;
     }
 
+    newNode->next = *head;
     *head = newNode;
 
     return true;
@@ -57,29 +58,23 @@ void freeList(Node* head) {
 }
 
 unsigned int hash(const char* word) {
-    unsigned int hash_value = 0;
+    unsigned int hashValue = 0;
     int i = 0;
     while (word[i] != '\0') {
-        hash_value = (hash_value * 31) + (unsigned char)(word[i]);
+        hashValue = (hashValue * 31) + (unsigned char)(word[i]);
         i++;
     }
-    return hash_value % TABLE_SIZE;
+    return hashValue % TABLE_SIZE;
 }
 
-HashTable* createTable() {
-    HashTable* hashTable = ñalloc(1, sizeof(HashTable));
-    if (hashTable == NULL) {
-        return NULL;
-    }
+HashTable* createTable(void) {
+    HashTable* hashTable = calloc(1, sizeof(HashTable));
     return hashTable;
 }
 
 bool insertWord(HashTable* hashTable, const char* word) {
     unsigned int index = hash(word);
-    if (!insert(&(hashTable->table[index]), word)) {
-        return false;
-    }
-    return true;
+    return insert(&(hashTable->table[index]), word);
 }
 
 Node* search(HashTable* hashTable, const char* word) {

@@ -130,7 +130,6 @@
     <ClCompile Include="hashtable.c">
       <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</SDLCheck>
     </ClCompile>
-    <ClCompile Include="list.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hashtable.h" />
-    <ClInclude Include="list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

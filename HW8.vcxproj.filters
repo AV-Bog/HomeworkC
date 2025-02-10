@@ -21,9 +21,6 @@
     <ClCompile Include="hashtable.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="list.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="file.txt">
@@ -32,9 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hashtable.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="list.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
