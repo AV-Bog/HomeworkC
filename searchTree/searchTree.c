@@ -15,32 +15,40 @@ Node* createTreeNode(NodeValue value, int* errorCode) {
         *errorCode = 1;
         return NULL;
     }
-    newNode->value = value;
+
+    newNode->value.key = value.key;
+    newNode->value.value = malloc(strlen(value.value) + 1);
+    if (newNode->value.value == NULL) {
+        free(newNode);
+        *errorCode = 1;
+        return NULL;
+    }
+    strcpy(newNode->value.value, value.value);
+
     return newNode;
-}
-
-void attachLeftChild(Node* node, Node* child) {
-    node->leftChild = child;
-}
-
-void attachRightChild(Node* node, Node* child) {
-    node->rightChild = child;
 }
 
 void insertNode(Node* node, NodeValue value, int* error) {
     if (node->value.key == value.key) {
-        char* oldValue = node->value.value;
-        node->value = value;
-        free(oldValue);
+        free(node->value.value);
+        node->value.value = malloc(strlen(value.value) + 1);
+        if (node->value.value == NULL) {
+            *error = 1;
+        }
+        else {
+            strcpy(node->value.value, value.value);
+        }
         return;
     }
     if (node->value.key > value.key && !node->leftChild) {
         Node* newNode = createTreeNode(value, error);
-        attachLeftChild(node, newNode);
+        if (*error == 1) return;
+        node->leftChild = newNode;
     }
     else if (node->value.key < value.key && !node->rightChild) {
         Node* newNode = createTreeNode(value, error);
-        attachRightChild(node, newNode);
+        if (*error == 1) return;
+        node->rightChild = newNode;
     }
     else if (node->value.key > value.key) {
         insertNode(node->leftChild, value, error);
@@ -48,22 +56,6 @@ void insertNode(Node* node, NodeValue value, int* error) {
     else if (node->value.key < value.key) {
         insertNode(node->rightChild, value, error);
     }
-}
-
-Node* getLeftChild(Node* node) {
-    return node->leftChild;
-}
-
-Node* getRightChild(Node* node) {
-    return node->rightChild;
-}
-
-NodeValue getNodeValue(Node* node) {
-    return node->value;
-}
-
-void setNodeValue(Node* node, NodeValue value) {
-    node->value = value;
 }
 
 Node* getMinNodeOfRightSubtree(Node* node) {
@@ -75,38 +67,6 @@ Node* getMinNodeOfRightSubtree(Node* node) {
     }
     parentOfMin->leftChild = minNode->rightChild ? minNode->rightChild : NULL;
     return minNode;
-}
-
-Node* findElementByKey(Node* node, int key) {
-    if (!node) {
-        return NULL;
-    }
-    else if (node->value.key == key) {
-        return node;
-    }
-    else if (node->value.key > key) {
-        return findElementByKey(node->leftChild, key);
-    }
-
-    return findElementByKey(node->rightChild, key);
-}
-
-bool isNodePresent(Node* node, int key) {
-    return findElementByKey(node, key) != NULL;
-}
-
-Node* findParentNodeForRemoval(Node* node, int key) {
-    if (!node || node->value.key == key) {
-        return node;
-    }
-    if ((node->leftChild && node->leftChild->value.key == key) || (node->rightChild && node->rightChild->value.key == key)) {
-        return node;
-    }
-    if (node->value.key > key) {
-        return findParentNodeForRemoval(node->leftChild, key);
-    }
-
-    return findParentNodeForRemoval(node->rightChild, key);
 }
 
 void deleteNodeByKey(Node* node, int key) {
@@ -135,8 +95,17 @@ void deleteNodeByKey(Node* node, int key) {
         else {
             replacementNode = getMinNodeOfRightSubtree(nodeToDelete);
             replacementNode->leftChild = nodeToDelete->leftChild;
-
         }
+
+        if (parent->leftChild == nodeToDelete) {
+            parent->leftChild = replacementNode;
+        }
+        else {
+            parent->rightChild = replacementNode;
+        }
+
+        free(nodeToDelete->value.value);
+        free(nodeToDelete);
     }
 }
 
