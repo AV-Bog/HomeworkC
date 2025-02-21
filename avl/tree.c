@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "tree.h"
 
 typedef struct Node {
@@ -31,7 +32,18 @@ Node* getNewNode(char* key, char* value) {
         return NULL;
     }
     newNode->key = strdup(key);
+    if (newNode->key == NULL) {
+        free(newNode);
+        return NULL;
+    }
+
     newNode->value = strdup(value);
+    if (newNode->value == NULL) {
+        free(newNode->key);
+        free(newNode);
+        return NULL;
+    }
+
     newNode->left = NULL;
     newNode->right = NULL;
     newNode->height = 1;
@@ -89,13 +101,15 @@ Node* insertRecursive(Node* root, char* key, char* value) {
 
     if (strcmp(key, root->key) < 0) {
         root->left = insertRecursive(root->left, key, value);
-    }
-    else if (strcmp(key, root->key) > 0) {
+    } else if (strcmp(key, root->key) > 0) {
         root->right = insertRecursive(root->right, key, value);
-    }
-    else {
+    } else {
+        char* newValue = strdup(value);
+        if (newValue == NULL) {
+            return root;
+        }
         free(root->value);
-        root->value = strdup(value);
+        root->value = newValue;
         return root;
     }
 
@@ -200,11 +214,9 @@ Node* deleteRootRecursion(Node* root, char* key) {
 
     if (strcmp(key, root->key) < 0) {
         root->left = deleteRootRecursion(root->left, key);
-    }
-    else if (strcmp(key, root->key) > 0) {
+    } else if (strcmp(key, root->key) > 0) {
         root->right = deleteRootRecursion(root->right, key);
-    }
-    else {
+    } else {
         if (root->left == NULL || root->right == NULL) {
             Node* temp = root->left ? root->left : root->right;
             if (temp == NULL) {
@@ -212,20 +224,18 @@ Node* deleteRootRecursion(Node* root, char* key) {
                 free(root->value);
                 free(root);
                 return NULL;
-            }
-            else {
+            } else {
                 *root = *temp;
                 free(temp->key);
                 free(temp->value);
                 free(temp);
             }
-        }
-        else {
+        } else {
             Node* temp = minValueNode(root->right);
             free(root->key);
             free(root->value);
-            root->key = temp->key;
-            root->value = temp->value;
+            root->key = strdup(temp->key);
+            root->value = strdup(temp->value);
             root->right = deleteRootRecursion(root->right, temp->key);
         }
     }

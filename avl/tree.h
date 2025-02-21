@@ -5,6 +5,14 @@ typedef struct Dictionary Dictionary;
 
 typedef struct Node Node;
 
+struct Node {
+    char* key;
+    char* value;
+    int height;
+    Node* left;
+    Node* right;
+};
+
 // Creating a structure for storing a dictionary
 Dictionary* createDictionary();
 

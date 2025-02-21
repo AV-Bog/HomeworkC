@@ -2,22 +2,27 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 #include "tree.h"
 
 void options(void);
 bool checkingRotates(void);
 bool functionCheck(void);
 
-bool tests() {
+bool tests(void) {
     return checkingRotates() && functionCheck();
 }
 
-int main() {
+int main(void) {
     if (!tests()) {
         return 1;
     }
 
     Dictionary* dictionary = createDictionary();
+    if (dictionary == NULL) {
+        printf("Faild to create dictionary\n");
+        return 1;
+    }
 
     int choice = -1;
     const valueBuffer[256] = { '\0' };
@@ -35,14 +40,18 @@ int main() {
             printf("Enter the value: ");
             scanf("%s", valueBuffer);
             insert(dictionary, keyBuffer, valueBuffer);
-            printf("Value and its corresponding key have been successfully added!\n");
-            printf("\n");
+            printf("Value and its corresponding key have been successfully added!\n\n");
             break;
         case 2:
             printf("Enter key: ");
             scanf("%s", keyBuffer);
-            printf("The value is %s\n", getValue(dictionary, keyBuffer));
-            printf("\n");
+            char* value = getValue(dictionary, keyBuffer);
+            if (value != NULL) {
+                printf("The value is %s\n\n", value);
+            }
+            else {
+                printf("Key not found\n\n");
+            }
             break;
         case 3:
             printf("Enter a key: ");
@@ -68,12 +77,12 @@ int main() {
         default:
             printf("Invalid input\n");
             deleteDictionary(dictionary);
-            break;
+            return 1;
         }
     } while (choice != 0);
 
     deleteDictionary(dictionary);
-    return 1;
+    return 0;
 }
 
 void options(void) {
