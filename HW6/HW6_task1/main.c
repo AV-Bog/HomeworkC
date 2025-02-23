@@ -23,6 +23,7 @@ int main() {
         printf("Enter option number: ");
         if (scanf("%d", &option) != 1) {
             printf("Error input\n");
+            deleteList(list);
             return 1;
         }
         switch (option) {
@@ -50,6 +51,7 @@ int main() {
         }
         default:
             printf("There is no such operation\n");
+            deleteList(list);
             return 0;
         }
     }
@@ -66,33 +68,35 @@ void printOptions() {
 
 void printList(List* list) {
     Position position = first(list);
-    position = next(position);
-    while (position != NULL) {
-        printf("%d ", getValue(list, position));
+    while (position != NULL && !isLast(list, position)) {
         position = next(position);
+        printf("%d ", getValue(list, position));
     }
     printf("\n");
 }
 
 void addElementToSortedList(List* list, Value value) {
     Position position = first(list);
-    while (!isLast(list, position) && getValue(list, next(position)) <= value) {
+    while (!isLast(list, position) && getValue(list, next(position)) <= value && position != NULL) {
         position = next(position);
     }
-    addElement(list, position, value);
+    if (position != NULL) {
+        addElement(list, position, value);
+    }
 }
 
 void deleteElementFromSortedList(List* list, Value value) {
     Position position = first(list);
     while (!isLast(list, position)) {
-        if (getValue(list, next(position)) == value) {
+        Position nextPosition = next(position);
+        if (getValue(list, nextPosition) == value) {
             deleteElement(list, position);
             break;
         }
-        if (getValue(list, position) > value) {
+        if (getValue(list, nextPosition) > value) {
             break;
         }
-        position = next(position);
+        position = next(nextPosition);
     }
 }
 
@@ -121,6 +125,7 @@ bool listTest() {
     addElement(list, position, 52);
     position = next(position);
     addElement(list, position, 63);
+
     setValue(list, position, 71);
     if (getValue(list, position) != 71) {
         printf("multiple addition error");
@@ -128,5 +133,6 @@ bool listTest() {
         return false;
     }
 
+    deleteList(list);
     return true;
 }

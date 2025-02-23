@@ -4,7 +4,7 @@
 typedef struct ListElement ListElement; // List element structure
 typedef struct List List; // List structure
 typedef ListElement* Position; // Position type, representing a pointer to a ListElement
-typedef int Value; 
+typedef int Value; // The value of the variable
 
 // Creates and returns a new, empty list
 List* createList(void);
