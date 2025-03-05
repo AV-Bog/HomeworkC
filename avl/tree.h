@@ -3,21 +3,14 @@
 // Structure for storing a dictionary
 typedef struct Dictionary Dictionary;
 
+// Structure for storing a node in the dictionary
 typedef struct Node Node;
-
-struct Node {
-    char* key;
-    char* value;
-    int height;
-    Node* left;
-    Node* right;
-};
 
 // Creating a structure for storing a dictionary
 Dictionary* createDictionary();
 
 // Node insertion function
-void insert(Dictionary* dictionary, const char* key, const char* value);
+bool insert(Dictionary* dictionary, const char* key, const char* value);
 
 // The function of verifying the existence of a key in the tree
 bool theKeyExists(Dictionary* dictionary, char* key);
@@ -30,3 +23,6 @@ char* getValue(Dictionary* dictionary, char* key);
 
 // Dictionary deletion function
 void deleteDictionary(Dictionary* dictionary);
+
+// Function for checking the balance of the dictionary
+bool checkBalance(Dictionary* dictionary);

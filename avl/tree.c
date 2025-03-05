@@ -18,12 +18,7 @@ struct Dictionary {
 };
 
 Dictionary* createDictionary() {
-    Dictionary* tree = calloc(1, sizeof(Dictionary));
-    if (tree == NULL) {
-        return NULL;
-    }
-    tree->root = NULL;
-    return tree;
+    return calloc(1, sizeof(Dictionary));
 }
 
 Node* getNewNode(char* key, char* value) {
@@ -94,22 +89,34 @@ Node* leftRotate(Node* root) {
     return rightSubtree;
 }
 
-Node* insertRecursive(Node* root, char* key, char* value) {
+Node* insertRecursive(Node* root, const char* key, char* value, bool* errorCode) {
     if (root == NULL) {
-        return getNewNode(key, value);
+        Node* newNode = getNewNode(key, value);
+        if (newNode == NULL) {
+            *errorCode = false; 
+            return NULL;
+        }
+        *errorCode = true;
+        return newNode;
     }
 
     if (strcmp(key, root->key) < 0) {
-        root->left = insertRecursive(root->left, key, value);
+        root->left = insertRecursive(root->left, key, value, errorCode);
     } else if (strcmp(key, root->key) > 0) {
-        root->right = insertRecursive(root->right, key, value);
+        root->right = insertRecursive(root->right, key, value, errorCode);
     } else {
         char* newValue = strdup(value);
         if (newValue == NULL) {
+            *errorCode = false;
             return root;
         }
         free(root->value);
         root->value = newValue;
+        *errorCode = true;
+        return root;
+    }
+
+    if (!(*errorCode)) {
         return root;
     }
 
@@ -138,8 +145,10 @@ Node* insertRecursive(Node* root, char* key, char* value) {
     return root;
 }
 
-void insert(Dictionary* dictionary, const char* key, const char* value) {
-    dictionary->root = insertRecursive(dictionary->root, key, value);
+bool insert(Dictionary* dictionary, const char* key, const char* value) {
+    bool errorCode = false;
+    dictionary->root = insertRecursive(dictionary->root, key, value, &errorCode);
+    return errorCode;
 }
 
 void deleteRecursion(Node* root) {
@@ -271,4 +280,24 @@ Node* deleteRootRecursion(Node* root, char* key) {
 
 void deleteViaKey(Dictionary* dictionary, char* key) {
     dictionary->root = deleteRootRecursion(dictionary->root, key);
+}
+
+
+bool checkBalanceHelper(Node* node) {
+    if (node == NULL) {
+        return true;
+    }
+
+    int balance = getBalance(node);
+
+    if (balance < -1 || balance > 1) {
+        printf("Balance invariant violated at node with key: %s\n", node->key);
+        return false;
+    }
+
+    return checkBalanceHelper(node->left) && checkBalanceHelper(node->right);
+}
+
+bool checkBalance(Dictionary* dictionary) {
+    return checkBalanceHelper(dictionary->root);
 }

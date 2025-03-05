@@ -6,11 +6,11 @@
 #include "tree.h"
 
 void options(void);
-bool checkingRotates(void);
-bool functionCheck(void);
+bool checkRotations(void);
+bool runFunctionTests(void);
 
 bool tests(void) {
-    return checkingRotates() && functionCheck();
+    return checkRotations() && runFunctionTests();
 }
 
 int main(void) {
@@ -39,8 +39,12 @@ int main(void) {
             scanf("%s", keyBuffer);
             printf("Enter the value: ");
             scanf("%s", valueBuffer);
-            insert(dictionary, keyBuffer, valueBuffer);
-            printf("Value and its corresponding key have been successfully added!\n\n");
+            if (!insert(dictionary, keyBuffer, valueBuffer)) {
+                printf("Failed to insert key-value pair!\n\n");
+            }
+            else {
+                printf("Value and its corresponding key have been successfully added!\n\n");
+            }
             break;
         case 2:
             printf("Enter key: ");
@@ -95,55 +99,48 @@ void options(void) {
     printf("Enter a corresponding digit to choose an option: ");
 }
 
-bool checkBalanceHelper(Node* node) {
-    if (node == NULL) {
-        return true;
-    }
-
-    int balance = getBalance(node);
-
-    if (balance < -1 || balance > 1) {
-        printf("Balance invariant violated at node with key: %s\n", node->key);
+bool checkRotations(void) {
+    Dictionary* testDictionary0 = createDictionary();
+    if (!insert(testDictionary0, "4", "a") ||
+        !insert(testDictionary0, "3", "b") ||
+        !insert(testDictionary0, "2", "c") ||
+        !insert(testDictionary0, "1", "d")) {
+        printf("Failed to insert into testDictionary0\n");
+        deleteDictionary(testDictionary0);
         return false;
     }
-
-    return checkBalanceHelper(node->left) && checkBalanceHelper(node->right);
-}
-
-bool checkingBalanceInvariant(Dictionary* dictionary) {
-    return checkBalanceHelper(dictionary->root);
-}
-
-bool checkingRotates(void) {
-    Dictionary* testDictionary0 = createDictionary();
-    insert(testDictionary0, "4", "a");
-    insert(testDictionary0, "3", "b");
-    insert(testDictionary0, "2", "c");
-    insert(testDictionary0, "1", "d");
-    if (!checkingBalanceInvariant(testDictionary0)) {
+    if (!checkBalance(testDictionary0)) {
         deleteDictionary(testDictionary0);
         return false;
     }
     deleteDictionary(testDictionary0);
 
     Dictionary* testDictionary2 = createDictionary();
-    insert(testDictionary2, "7", "a");
-    insert(testDictionary2, "8", "d");
-    insert(testDictionary2, "3", "b");
-    insert(testDictionary2, "2", "c");
-    insert(testDictionary2, "5", "d");
-    if (!checkingBalanceInvariant(testDictionary2)) {
+    if (!insert(testDictionary2, "7", "a") ||
+        !insert(testDictionary2, "8", "d") ||
+        !insert(testDictionary2, "3", "b") ||
+        !insert(testDictionary2, "2", "c") ||
+        !insert(testDictionary2, "5", "d")) {
+        printf("Failed to insert into testDictionary2\n");
+        deleteDictionary(testDictionary2);
+        return false;
+    }
+    if (!checkBalance(testDictionary2)) {
         deleteDictionary(testDictionary2);
         return false;
     }
     deleteDictionary(testDictionary2);
 
     Dictionary* testDictionary3 = createDictionary();
-    insert(testDictionary3, "7", "a");
-    insert(testDictionary3, "3", "b");
-    insert(testDictionary3, "2", "c");
-    insert(testDictionary3, "5", "d");
-    if (!checkingBalanceInvariant(testDictionary3)) {
+    if (!insert(testDictionary3, "7", "a") ||
+        !insert(testDictionary3, "3", "b") ||
+        !insert(testDictionary3, "2", "c") ||
+        !insert(testDictionary3, "5", "d")) {
+        printf("Failed to insert into testDictionary3\n");
+        deleteDictionary(testDictionary3);
+        return false;
+    }
+    if (!checkBalance(testDictionary3)) {
         deleteDictionary(testDictionary3);
         return false;
     }
@@ -152,14 +149,18 @@ bool checkingRotates(void) {
     return true;
 }
 
-bool functionCheck(void) {
+bool runFunctionTests(void) {
     Dictionary* testDictionary = createDictionary();
-    insert(testDictionary, "7", "q");
-    insert(testDictionary, "3", "w");
-    insert(testDictionary, "2", "e");
-    insert(testDictionary, "5", "r");
-    insert(testDictionary, "6", "6");
-    insert(testDictionary, "14", "ty");
+    if (!insert(testDictionary, "7", "q") ||
+        !insert(testDictionary, "3", "w") ||
+        !insert(testDictionary, "2", "e") ||
+        !insert(testDictionary, "5", "r") ||
+        !insert(testDictionary, "6", "6") ||
+        !insert(testDictionary, "14", "ty")) {
+        printf("Failed to insert into testDictionary\n");
+        deleteDictionary(testDictionary);
+        return false;
+    }
 
     if (!theKeyExists(testDictionary, "2")) {
         printf("Existing key not found\n");
