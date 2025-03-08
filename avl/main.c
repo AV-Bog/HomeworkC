@@ -27,6 +27,7 @@ int main(void) {
     int choice = -1;
     const valueBuffer[256] = { '\0' };
     const keyBuffer[256] = { '\0' };
+    bool errorCode = true;
 
     do {
         options();
@@ -39,8 +40,16 @@ int main(void) {
             scanf("%s", keyBuffer);
             printf("Enter the value: ");
             scanf("%s", valueBuffer);
-            if (!insert(dictionary, keyBuffer, valueBuffer)) {
-                printf("Failed to insert key-value pair!\n\n");
+
+            errorCode = true;
+            if (!insert(dictionary, keyBuffer, valueBuffer, errorCode)) {
+                if (!errorCode) {
+                    printf("Memory allocation failed during insertion!\n\n");
+                }
+                else {
+                    printf("Failed to insert key-value pair!\n\n");
+                }
+                
             }
             else {
                 printf("Value and its corresponding key have been successfully added!\n\n");
@@ -71,7 +80,7 @@ int main(void) {
             printf("Enter a key: ");
             scanf("%s", keyBuffer);
             if (theKeyExists(dictionary, keyBuffer)) {
-                deleteViaKey(dictionary, keyBuffer);
+                deleteViaKey(dictionary, keyBuffer, errorCode);
                 printf("The key and its corresponding value were successfully deleted\n");
             }
             else {
@@ -101,10 +110,12 @@ void options(void) {
 
 bool checkRotations(void) {
     Dictionary* testDictionary0 = createDictionary();
-    if (!insert(testDictionary0, "4", "a") ||
-        !insert(testDictionary0, "3", "b") ||
-        !insert(testDictionary0, "2", "c") ||
-        !insert(testDictionary0, "1", "d")) {
+    bool errorCode = true;
+
+    if (!insert(testDictionary0, "4", "a", &errorCode) || !errorCode ||
+        !insert(testDictionary0, "3", "b", & errorCode) || !errorCode ||
+        !insert(testDictionary0, "2", "c", &errorCode) || !errorCode ||
+        !insert(testDictionary0, "1", "d", &errorCode) || !errorCode) {
         printf("Failed to insert into testDictionary0\n");
         deleteDictionary(testDictionary0);
         return false;
@@ -116,11 +127,11 @@ bool checkRotations(void) {
     deleteDictionary(testDictionary0);
 
     Dictionary* testDictionary2 = createDictionary();
-    if (!insert(testDictionary2, "7", "a") ||
-        !insert(testDictionary2, "8", "d") ||
-        !insert(testDictionary2, "3", "b") ||
-        !insert(testDictionary2, "2", "c") ||
-        !insert(testDictionary2, "5", "d")) {
+    if (!insert(testDictionary2, "7", "a", &errorCode) || !errorCode ||
+        !insert(testDictionary2, "8", "d", &errorCode) || !errorCode ||
+        !insert(testDictionary2, "3", "b", &errorCode) || !errorCode ||
+        !insert(testDictionary2, "2", "c", &errorCode) || !errorCode ||
+        !insert(testDictionary2, "5", "d", &errorCode) || !errorCode) {
         printf("Failed to insert into testDictionary2\n");
         deleteDictionary(testDictionary2);
         return false;
@@ -131,15 +142,17 @@ bool checkRotations(void) {
     }
     deleteDictionary(testDictionary2);
 
+
     Dictionary* testDictionary3 = createDictionary();
-    if (!insert(testDictionary3, "7", "a") ||
-        !insert(testDictionary3, "3", "b") ||
-        !insert(testDictionary3, "2", "c") ||
-        !insert(testDictionary3, "5", "d")) {
+    if (!insert(testDictionary3, "7", "a", &errorCode) || !errorCode ||
+        !insert(testDictionary3, "3", "b", &errorCode) || !errorCode ||
+        !insert(testDictionary3, "2", "c", &errorCode) || !errorCode ||
+        !insert(testDictionary3, "5", "d", &errorCode) || !errorCode) {
         printf("Failed to insert into testDictionary3\n");
         deleteDictionary(testDictionary3);
         return false;
     }
+
     if (!checkBalance(testDictionary3)) {
         deleteDictionary(testDictionary3);
         return false;
@@ -151,17 +164,18 @@ bool checkRotations(void) {
 
 bool runFunctionTests(void) {
     Dictionary* testDictionary = createDictionary();
-    if (!insert(testDictionary, "7", "q") ||
-        !insert(testDictionary, "3", "w") ||
-        !insert(testDictionary, "2", "e") ||
-        !insert(testDictionary, "5", "r") ||
-        !insert(testDictionary, "6", "6") ||
-        !insert(testDictionary, "14", "ty")) {
+    bool errorCode = true;
+
+    if (!insert(testDictionary, "7", "q", &errorCode) || !errorCode ||
+        !insert(testDictionary, "3", "w", &errorCode) || !errorCode ||
+        !insert(testDictionary, "2", "e", &errorCode) || !errorCode ||
+        !insert(testDictionary, "5", "r", &errorCode) || !errorCode ||
+        !insert(testDictionary, "6", "6", &errorCode) || !errorCode ||
+        !insert(testDictionary, "14", "ty", &errorCode) || !errorCode) {
         printf("Failed to insert into testDictionary\n");
         deleteDictionary(testDictionary);
         return false;
     }
-
     if (!theKeyExists(testDictionary, "2")) {
         printf("Existing key not found\n");
         deleteDictionary(testDictionary);
@@ -177,17 +191,24 @@ bool runFunctionTests(void) {
         deleteDictionary(testDictionary);
         return false;
     }
-    if (strcmp(getValue(testDictionary, "13"), "NULL") != 0) {
+    if (getValue(testDictionary, "13") != NULL) {
         printf("Get value function failed on trying to get a value of a nonexistent key\n");
         deleteDictionary(testDictionary);
         return false;
     }
-    deleteViaKey(testDictionary, "2");
-    if (theKeyExists(testDictionary, "2")) {
+
+    deleteViaKey(testDictionary, "2", &errorCode);
+    if (!errorCode) {
         printf("Error deleting key with its corresponding value\n");
         deleteDictionary(testDictionary);
         return false;
     }
+    if (theKeyExists(testDictionary, "2")) {
+        printf("Key was not deleted properly\n");
+        deleteDictionary(testDictionary);
+        return false;
+    }
 
+    deleteDictionary(testDictionary);
     return true;
 }
